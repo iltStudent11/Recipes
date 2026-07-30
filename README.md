@@ -190,6 +190,23 @@ curl -i -X DELETE http://localhost:3000/pantry/flour
 
 I store recipes in [data/recipes.json](data/recipes.json), meal plans in [data/mealPlans.json](data/mealPlans.json), and pantry items in [data/pantry.json](data/pantry.json).
 
+## Deliverables Verification
+
+- ✅ Express REST API with full CRUD operations:
+  - Recipes CRUD in [src/routes/recipeRoutes.js](src/routes/recipeRoutes.js)
+  - Meal plans CRUD-adjacent operations in [src/routes/mealPlanRoutes.js](src/routes/mealPlanRoutes.js)
+  - Pantry CRUD-adjacent operations in [src/routes/pantryRoutes.js](src/routes/pantryRoutes.js)
+- ✅ At least one custom middleware function:
+  - Request logger in [src/middleware/requestLogger.js](src/middleware/requestLogger.js)
+- ✅ Express Router for route organization:
+  - Resource routers in [src/routes/recipeRoutes.js](src/routes/recipeRoutes.js), [src/routes/mealPlanRoutes.js](src/routes/mealPlanRoutes.js), [src/routes/pantryRoutes.js](src/routes/pantryRoutes.js), and [src/routes/healthRoutes.js](src/routes/healthRoutes.js)
+- ✅ Centralized error handling:
+  - Not-found and error handlers in [src/middleware/errorHandlers.js](src/middleware/errorHandlers.js), mounted in [src/app.js](src/app.js)
+- ✅ Query parameter support for filtering or search:
+  - `category` and `q` filters on `GET /recipes` in [src/routes/recipeRoutes.js](src/routes/recipeRoutes.js)
+- ✅ AI usage documentation with at least two interactions:
+  - Documented in [AI-USAGE.md](AI-USAGE.md)
+
 ## API Client Collections
 
 - Postman: [postman/Bakery Recipes API.postman_collection.json](postman/Bakery%20Recipes%20API.postman_collection.json)
