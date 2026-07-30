@@ -12,28 +12,74 @@
         margin: 0;
         background: #f8fafc;
         color: #0f172a;
+        line-height: 1.4;
       }
       .container {
-        max-width: 900px;
+        max-width: 1100px;
         margin: 0 auto;
-        padding: 24px;
+        padding: 24px 24px 32px;
+      }
+      h1, h2, h3 {
+        margin-top: 0;
       }
       h1 {
-        margin: 0 0 12px;
+        margin-bottom: 0;
       }
-      p {
-        margin: 0 0 20px;
+      h2 {
+        margin-bottom: 12px;
       }
-      .grid {
+      .topbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 12px;
+        flex-wrap: wrap;
+        margin-bottom: 8px;
+      }
+      .topbar-actions {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+      }
+      .subheading {
+        margin: 0 0 8px;
+        color: #475569;
+        font-size: 14px;
+      }
+      .nav {
+        display: flex;
+        gap: 8px;
+        margin: 10px 0 16px;
+        flex-wrap: wrap;
+      }
+      .tab-btn {
+        border: 1px solid #cbd5e1;
+        background: #fff;
+        color: #0f172a;
+        font-weight: 600;
+        text-decoration: none;
+        display: inline-block;
+      }
+      .tab-btn.active {
+        background: #0ea5e9;
+        color: #fff;
+        border-color: #0ea5e9;
+      }
+      .grid-2 {
         display: grid;
         grid-template-columns: 1fr 1fr;
+        gap: 16px;
+      }
+      .grid-3 {
+        display: grid;
+        grid-template-columns: 1.2fr 1fr;
         gap: 16px;
       }
       .card {
         background: #ffffff;
         border: 1px solid #e2e8f0;
         border-radius: 12px;
-        padding: 16px;
+        padding: 18px;
       }
       label {
         display: block;
@@ -46,8 +92,25 @@
         border: 1px solid #cbd5e1;
         border-radius: 8px;
         padding: 10px;
-        margin-bottom: 10px;
+        margin-bottom: 12px;
         font-size: 14px;
+      }
+      select {
+        width: 100%;
+        box-sizing: border-box;
+        border: 1px solid #cbd5e1;
+        border-radius: 8px;
+        padding: 10px;
+        margin-bottom: 12px;
+        font-size: 14px;
+        background: #fff;
+      }
+      input:focus,
+      textarea:focus,
+      select:focus {
+        outline: 2px solid #bae6fd;
+        outline-offset: 1px;
+        border-color: #0ea5e9;
       }
       textarea {
         min-height: 90px;
@@ -58,6 +121,7 @@
         border-radius: 8px;
         padding: 10px 14px;
         cursor: pointer;
+        font-weight: 600;
       }
       .primary { background: #0ea5e9; color: white; }
       .secondary { background: #e2e8f0; color: #0f172a; }
@@ -70,9 +134,14 @@
       li {
         border: 1px solid #e2e8f0;
         border-radius: 10px;
-        padding: 12px;
+        padding: 14px;
         margin-bottom: 10px;
         background: #fff;
+      }
+      .list-scroll {
+        max-height: 420px;
+        overflow: auto;
+        padding-right: 4px;
       }
       .row {
         display: flex;
@@ -84,12 +153,35 @@
         font-size: 14px;
       }
       .status {
-        margin-bottom: 12px;
+        margin-bottom: 14px;
         font-size: 14px;
         min-height: 20px;
+        background: #e2e8f0;
+        border: 1px solid #cbd5e1;
+        border-radius: 8px;
+        padding: 8px 10px;
       }
-      @media (max-width: 800px) {
-        .grid {
+      .stack {
+        display: grid;
+        gap: 16px;
+      }
+      .hidden {
+        display: none !important;
+      }
+      .recipe-option {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+        padding: 6px 0;
+        border-bottom: 1px solid #f1f5f9;
+      }
+      .recipe-option input {
+        width: auto;
+        margin: 0;
+      }
+      @media (max-width: 900px) {
+        .grid-2,
+        .grid-3 {
           grid-template-columns: 1fr;
         }
       }
@@ -97,37 +189,129 @@
   </head>
   <body>
     <main class="container">
-      <h1>Bakery Recipes</h1>
+      <div class="topbar">
+        <h1>Bakery Recipes</h1>
+        <div class="topbar-actions">
+          <button id="quick-new-recipe" class="primary" type="button">New Recipe</button>
+          <button id="quick-new-meal-plan" class="secondary" type="button">New Meal Plan</button>
+        </div>
+      </div>
+      <p class="subheading">Switch tabs to focus on one task at a time: recipes, planning, or shopping.</p>
+
+      <nav class="nav" aria-label="Sections">
+        <a id="tab-recipes" class="tab-btn active" href="#recipes">Recipes</a>
+        <a id="tab-meal-plans" class="tab-btn" href="#meal-plans">Meal Plans</a>
+        <a id="tab-shopping" class="tab-btn" href="#shopping">Shopping Lists</a>
+      </nav>
+
       <div id="status" class="status"></div>
 
-      <div class="grid">
+      <section id="view-recipes" class="stack">
         <section class="card">
-          <h2>Create Recipe</h2>
-          <form id="create-form">
-            <label for="create-name">Name</label>
-            <input id="create-name" name="name" required />
-
-            <label for="create-category">Category</label>
-            <input id="create-category" name="category" required />
-
-            <label for="create-ingredients">Ingredients (comma separated)</label>
-            <input id="create-ingredients" name="ingredients" required />
-
-            <label for="create-instructions">Instructions</label>
-            <textarea id="create-instructions" name="instructions" required></textarea>
-
-            <button type="submit" class="primary">Create</button>
-          </form>
-        </section>
-
-        <section class="card">
-          <h2>Recipes</h2>
-          <div class="row" style="margin-bottom: 10px;">
-            <button id="refresh-btn" class="secondary" type="button">Refresh</button>
+          <h2>Recipe Browser</h2>
+          <div class="grid-2">
+            <div>
+              <label for="recipe-search">Search</label>
+              <input id="recipe-search" placeholder="name or instructions" />
+            </div>
+            <div>
+              <label for="recipe-category-filter">Category</label>
+              <select id="recipe-category-filter">
+                <option value="">All categories</option>
+              </select>
+            </div>
           </div>
-          <ul id="recipes-list"></ul>
+          <div class="row">
+            <button id="recipe-filter-btn" class="secondary" type="button">Apply Filter</button>
+            <button id="recipe-clear-btn" class="secondary" type="button">Clear Filter</button>
+          </div>
         </section>
-      </div>
+
+        <div class="grid-3">
+          <section class="card">
+            <h2>Recipes</h2>
+            <ul id="recipe-summary-list" class="list-scroll"></ul>
+          </section>
+
+          <section class="stack">
+            <section class="card">
+              <h2>Recipe Details</h2>
+              <div id="recipe-detail" class="muted">Select a recipe to view details.</div>
+              <div class="row" style="margin-top: 10px;">
+                <button id="recipe-edit-btn" class="secondary" type="button">Edit</button>
+                <button id="recipe-delete-btn" class="danger" type="button">Delete</button>
+              </div>
+            </section>
+
+            <section class="card">
+              <h2 id="recipe-form-title">Create Recipe</h2>
+              <form id="recipe-form">
+                <input type="hidden" id="recipe-form-id" />
+                <label for="recipe-form-name">Name</label>
+                <input id="recipe-form-name" name="name" required />
+
+                <label for="recipe-form-category">Category</label>
+                <input id="recipe-form-category" name="category" required />
+
+                <label for="recipe-form-ingredients">Ingredients (comma separated)</label>
+                <input id="recipe-form-ingredients" name="ingredients" required />
+
+                <label for="recipe-form-instructions">Instructions</label>
+                <textarea id="recipe-form-instructions" name="instructions" required></textarea>
+
+                <div class="row">
+                  <button type="submit" class="primary">Save</button>
+                  <button id="recipe-form-cancel" type="button" class="secondary">Cancel Edit</button>
+                </div>
+              </form>
+            </section>
+          </section>
+        </div>
+      </section>
+
+      <section id="view-meal-plans" class="stack hidden">
+        <div class="grid-3">
+          <section class="card">
+            <h2>Meal Plans</h2>
+            <div class="row" style="margin-bottom: 10px;">
+              <button id="meal-plans-refresh-btn" class="secondary" type="button">Refresh Meal Plans</button>
+            </div>
+            <ul id="meal-plans-list" class="list-scroll"></ul>
+          </section>
+
+          <section class="card">
+            <h2>Create Meal Plan</h2>
+            <form id="meal-plan-form" style="margin-bottom: 12px;">
+              <label for="meal-plan-name">Plan Name</label>
+              <input id="meal-plan-name" name="name" required />
+
+              <label for="meal-plan-recipe-search">Find Recipes</label>
+              <input id="meal-plan-recipe-search" placeholder="search recipes" />
+
+              <label>Select Recipes</label>
+              <div id="meal-plan-recipe-options" class="card" style="padding: 10px; max-height: 240px; overflow: auto;"></div>
+
+              <div style="margin-top: 10px;">
+                <button type="submit" class="primary">Create Meal Plan</button>
+              </div>
+            </form>
+          </section>
+        </div>
+      </section>
+
+      <section id="view-shopping" class="stack hidden">
+        <section class="card">
+          <h2>Shopping List</h2>
+          <label for="shopping-plan-select">Meal Plan</label>
+          <select id="shopping-plan-select">
+            <option value="">Select a meal plan</option>
+          </select>
+          <div class="row" style="margin-bottom: 10px;">
+            <button id="shopping-load-btn" class="secondary" type="button">Load Shopping List</button>
+          </div>
+          <ul id="shopping-list-items"></ul>
+        </section>
+      </section>
     </main>
 
     <script src="/app.js"></script>

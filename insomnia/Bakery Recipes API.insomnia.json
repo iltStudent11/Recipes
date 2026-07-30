@@ -17,7 +17,8 @@
       "name": "Base Environment",
       "data": {
         "base_url": "http://localhost:3000",
-        "recipe_id": "1"
+        "recipe_id": "1",
+        "meal_plan_id": "1"
       }
     },
     {
@@ -25,6 +26,12 @@
       "_type": "request_group",
       "parentId": "wrk_bakery_recipes_api",
       "name": "Recipes"
+    },
+    {
+      "_id": "fld_meal_plans",
+      "_type": "request_group",
+      "parentId": "wrk_bakery_recipes_api",
+      "name": "Meal Plans"
     },
     {
       "_id": "req_health",
@@ -104,6 +111,69 @@
       "name": "Delete Recipe",
       "method": "DELETE",
       "url": "{{ _.base_url }}/recipes/{{ _.recipe_id }}",
+      "body": {},
+      "parameters": [],
+      "headers": []
+    },
+    {
+      "_id": "req_list_meal_plans",
+      "_type": "request",
+      "parentId": "fld_meal_plans",
+      "name": "List Meal Plans",
+      "method": "GET",
+      "url": "{{ _.base_url }}/meal-plans",
+      "body": {},
+      "parameters": [],
+      "headers": []
+    },
+    {
+      "_id": "req_get_meal_plan",
+      "_type": "request",
+      "parentId": "fld_meal_plans",
+      "name": "Get Meal Plan By ID",
+      "method": "GET",
+      "url": "{{ _.base_url }}/meal-plans/{{ _.meal_plan_id }}",
+      "body": {},
+      "parameters": [],
+      "headers": []
+    },
+    {
+      "_id": "req_create_meal_plan",
+      "_type": "request",
+      "parentId": "fld_meal_plans",
+      "name": "Create Meal Plan",
+      "method": "POST",
+      "url": "{{ _.base_url }}/meal-plans",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"name\": \"Weekend Baking\",\n  \"recipeIds\": [1, 2]\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ]
+    },
+    {
+      "_id": "req_get_shopping_list",
+      "_type": "request",
+      "parentId": "fld_meal_plans",
+      "name": "Get Shopping List",
+      "method": "GET",
+      "url": "{{ _.base_url }}/meal-plans/{{ _.meal_plan_id }}/shopping-list",
+      "body": {},
+      "parameters": [],
+      "headers": []
+    },
+    {
+      "_id": "req_delete_meal_plan",
+      "_type": "request",
+      "parentId": "fld_meal_plans",
+      "name": "Delete Meal Plan",
+      "method": "DELETE",
+      "url": "{{ _.base_url }}/meal-plans/{{ _.meal_plan_id }}",
       "body": {},
       "parameters": [],
       "headers": []

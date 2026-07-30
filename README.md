@@ -27,6 +27,13 @@ The server runs on `http://localhost:3000` by default.
 
 Frontend URL: `http://localhost:3000`
 
+The front-end page includes both **Recipes** and **Meal Planner** sections.
+
+Current front-end navigation uses three tabs:
+- **Recipes**: browse/filter recipes, view details, create/edit/delete
+- **Meal Plans**: create and manage meal plans from existing recipes
+- **Shopping Lists**: generate aggregated shopping lists by meal plan
+
 ## Project Structure
 
 ```text
@@ -38,6 +45,7 @@ src/
   routes/
     healthRoutes.js       # /health endpoint
     recipeRoutes.js       # /recipes CRUD endpoints
+    mealPlanRoutes.js     # /meal-plans + shopping list endpoints
   middleware/
     asyncHandler.js       # Async error wrapper
     requestLogger.js      # Request logging middleware
@@ -45,6 +53,7 @@ src/
     errorHandlers.js      # 404 and error middleware
   data/
     recipesStore.js       # JSON file read/write logic
+    mealPlansStore.js     # Meal plan JSON file read/write logic
 ```
 
 Environment variables are loaded with `dotenv` from `.env` and parsed via `src/config/env.js`.
@@ -61,6 +70,11 @@ Environment variables are loaded with `dotenv` from `.env` and parsed via `src/c
 - `PUT /recipes/:id` → `200 OK`, `400 Bad Request`, or `404 Not Found`
 - `PATCH /recipes/:id` → `200 OK`, `400 Bad Request`, or `404 Not Found`
 - `DELETE /recipes/:id` → `204 No Content`, `400 Bad Request`, or `404 Not Found`
+- `GET /meal-plans` → `200 OK`
+- `GET /meal-plans/:id` → `200 OK`, `400 Bad Request`, or `404 Not Found`
+- `POST /meal-plans` → `201 Created` or `400 Bad Request`
+- `GET /meal-plans/:id/shopping-list` → `200 OK`, `400 Bad Request`, or `404 Not Found`
+- `DELETE /meal-plans/:id` → `204 No Content`, `400 Bad Request`, or `404 Not Found`
 
 The API returns JSON bodies for success and errors (`400`, `404`, `500`).
 
@@ -124,6 +138,21 @@ curl -i -X PATCH http://localhost:3000/recipes/1 \
 curl -i -X DELETE http://localhost:3000/recipes/1
 ```
 
+### Create a meal plan
+```bash
+curl -i -X POST http://localhost:3000/meal-plans \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "Weekend Baking",
+    "recipeIds": [1, 2]
+  }'
+```
+
+### Get a shopping list for a meal plan
+```bash
+curl -i http://localhost:3000/meal-plans/1/shopping-list
+```
+
 ## Data Persistence
 
 Recipes are stored in [data/recipes.json](data/recipes.json). Changes made through the API are written to that file.
@@ -132,6 +161,8 @@ Recipes are stored in [data/recipes.json](data/recipes.json). Changes made throu
 
 - Postman: [postman/Bakery Recipes API.postman_collection.json](postman/Bakery%20Recipes%20API.postman_collection.json)
 - Insomnia: [insomnia/Bakery Recipes API.insomnia.json](insomnia/Bakery%20Recipes%20API.insomnia.json)
+
+Both collections include requests for Recipes and Meal Plans resources.
 
 ## Import Instructions
 

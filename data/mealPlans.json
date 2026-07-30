@@ -1,0 +1,11 @@
+[
+  {
+    "id": 1,
+    "name": "Weekend Baking",
+    "recipeIds": [
+      1,
+      2
+    ],
+    "createdAt": "2026-07-30T12:57:36.554Z"
+  }
+]

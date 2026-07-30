@@ -17,6 +17,10 @@
     {
       "key": "recipeId",
       "value": "1"
+    },
+    {
+      "key": "mealPlanId",
+      "value": "1"
     }
   ],
   "item": [
@@ -133,6 +137,99 @@
           "path": [
             "recipes",
             "{{recipeId}}"
+          ]
+        }
+      }
+    },
+    {
+      "name": "List Meal Plans",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/meal-plans",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "meal-plans"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Get Meal Plan By ID",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/meal-plans/{{mealPlanId}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "meal-plans",
+            "{{mealPlanId}}"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Create Meal Plan",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Weekend Baking\",\n  \"recipeIds\": [1, 2]\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/meal-plans",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "meal-plans"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Get Shopping List",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/meal-plans/{{mealPlanId}}/shopping-list",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "meal-plans",
+            "{{mealPlanId}}",
+            "shopping-list"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Delete Meal Plan",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/meal-plans/{{mealPlanId}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "meal-plans",
+            "{{mealPlanId}}"
           ]
         }
       }
