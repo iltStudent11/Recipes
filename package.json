@@ -1,0 +1,19 @@
+{
+  "name": "bakery-recipes-api",
+  "version": "1.0.0",
+  "description": "Small Express REST API for bakery recipes",
+  "main": "src/index.js",
+  "type": "commonjs",
+  "scripts": {
+    "api": "node src/index.js",
+    "smoke": "bash scripts/smoke-test.sh",
+    "start": "node src/index.js",
+    "dev": "nodemon --watch src --watch public --watch data --ext js,json,html src/index.js"
+  },
+  "dependencies": {
+    "express": "^4.21.2"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.4"
+  }
+}

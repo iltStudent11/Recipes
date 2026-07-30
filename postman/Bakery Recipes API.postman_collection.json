@@ -1,0 +1,141 @@
+{
+  "info": {
+    "name": "Bakery Recipes API",
+    "description": "Postman collection for the Bakery Recipes Express CRUD API.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "version": {
+      "major": 1,
+      "minor": 0,
+      "patch": 0
+    }
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3000"
+    },
+    {
+      "key": "recipeId",
+      "value": "1"
+    }
+  ],
+  "item": [
+    {
+      "name": "Health Check",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/health",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "health"
+          ]
+        }
+      }
+    },
+    {
+      "name": "List Recipes",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/recipes",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "recipes"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Get Recipe By ID",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/recipes/{{recipeId}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "recipes",
+            "{{recipeId}}"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Create Recipe",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Vanilla Cupcakes\",\n  \"category\": \"cupcake\",\n  \"ingredients\": [\"flour\", \"sugar\", \"butter\", \"eggs\", \"vanilla\"],\n  \"instructions\": \"Mix batter, fill cups, and bake at 175°C for 18 minutes.\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/recipes",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "recipes"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Update Recipe",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Updated Cookies\",\n  \"category\": \"cookie\",\n  \"ingredients\": [\"flour\", \"butter\", \"sugar\", \"eggs\"],\n  \"instructions\": \"Mix ingredients and bake.\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/recipes/{{recipeId}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "recipes",
+            "{{recipeId}}"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Delete Recipe",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/recipes/{{recipeId}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "recipes",
+            "{{recipeId}}"
+          ]
+        }
+      }
+    }
+  ]
+}

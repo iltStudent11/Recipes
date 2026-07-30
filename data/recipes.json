@@ -1,0 +1,40 @@
+[
+  {
+    "id": 1,
+    "name": "Chocolate Chip Cookies",
+    "category": "cookie",
+    "ingredients": [
+      "flour",
+      "butter",
+      "sugar",
+      "chocolate chips",
+      "eggs"
+    ],
+    "instructions": "Mix ingredients, shape dough, and bake at 180°C for 12 minutes."
+  },
+  {
+    "id": 2,
+    "name": "Sourdough Bread",
+    "category": "bread",
+    "ingredients": [
+      "bread flour",
+      "water",
+      "salt",
+      "starter"
+    ],
+    "instructions": "Mix, ferment, shape, proof, and bake in a hot Dutch oven."
+  },
+  {
+    "id": 3,
+    "name": "Lemon Tart",
+    "category": "tart",
+    "ingredients": [
+      "lemon",
+      "flour",
+      "butter",
+      "sugar",
+      "eggs"
+    ],
+    "instructions": "Prepare crust, fill, and bake."
+  }
+]

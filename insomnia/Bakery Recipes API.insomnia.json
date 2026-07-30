@@ -1,0 +1,112 @@
+{
+  "_type": "export",
+  "__export_format": 4,
+  "__export_date": "2026-07-30T00:00:00.000Z",
+  "__export_source": "github-copilot",
+  "resources": [
+    {
+      "_id": "wrk_bakery_recipes_api",
+      "_type": "workspace",
+      "name": "Bakery Recipes API",
+      "description": "Insomnia collection for the Bakery Recipes Express CRUD API."
+    },
+    {
+      "_id": "env_bakery_base",
+      "_type": "environment",
+      "parentId": "wrk_bakery_recipes_api",
+      "name": "Base Environment",
+      "data": {
+        "base_url": "http://localhost:3000",
+        "recipe_id": "1"
+      }
+    },
+    {
+      "_id": "fld_recipes",
+      "_type": "request_group",
+      "parentId": "wrk_bakery_recipes_api",
+      "name": "Recipes"
+    },
+    {
+      "_id": "req_health",
+      "_type": "request",
+      "parentId": "fld_recipes",
+      "name": "Health Check",
+      "method": "GET",
+      "url": "{{ _.base_url }}/health",
+      "body": {},
+      "parameters": [],
+      "headers": []
+    },
+    {
+      "_id": "req_list_recipes",
+      "_type": "request",
+      "parentId": "fld_recipes",
+      "name": "List Recipes",
+      "method": "GET",
+      "url": "{{ _.base_url }}/recipes",
+      "body": {},
+      "parameters": [],
+      "headers": []
+    },
+    {
+      "_id": "req_get_recipe",
+      "_type": "request",
+      "parentId": "fld_recipes",
+      "name": "Get Recipe By ID",
+      "method": "GET",
+      "url": "{{ _.base_url }}/recipes/{{ _.recipe_id }}",
+      "body": {},
+      "parameters": [],
+      "headers": []
+    },
+    {
+      "_id": "req_create_recipe",
+      "_type": "request",
+      "parentId": "fld_recipes",
+      "name": "Create Recipe",
+      "method": "POST",
+      "url": "{{ _.base_url }}/recipes",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"name\": \"Vanilla Cupcakes\",\n  \"category\": \"cupcake\",\n  \"ingredients\": [\"flour\", \"sugar\", \"butter\", \"eggs\", \"vanilla\"],\n  \"instructions\": \"Mix batter, fill cups, and bake at 175°C for 18 minutes.\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ]
+    },
+    {
+      "_id": "req_update_recipe",
+      "_type": "request",
+      "parentId": "fld_recipes",
+      "name": "Update Recipe",
+      "method": "PUT",
+      "url": "{{ _.base_url }}/recipes/{{ _.recipe_id }}",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"name\": \"Updated Cookies\",\n  \"category\": \"cookie\",\n  \"ingredients\": [\"flour\", \"butter\", \"sugar\", \"eggs\"],\n  \"instructions\": \"Mix ingredients and bake.\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ]
+    },
+    {
+      "_id": "req_delete_recipe",
+      "_type": "request",
+      "parentId": "fld_recipes",
+      "name": "Delete Recipe",
+      "method": "DELETE",
+      "url": "{{ _.base_url }}/recipes/{{ _.recipe_id }}",
+      "body": {},
+      "parameters": [],
+      "headers": []
+    }
+  ]
+}

@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Bakery Recipes</title>
+    <style>
+      :root {
+        font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+      }
+      body {
+        margin: 0;
+        background: #f8fafc;
+        color: #0f172a;
+      }
+      .container {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 24px;
+      }
+      h1 {
+        margin: 0 0 12px;
+      }
+      p {
+        margin: 0 0 20px;
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+      }
+      .card {
+        background: #ffffff;
+        border: 1px solid #e2e8f0;
+        border-radius: 12px;
+        padding: 16px;
+      }
+      label {
+        display: block;
+        font-size: 14px;
+        margin-bottom: 6px;
+      }
+      input, textarea {
+        width: 100%;
+        box-sizing: border-box;
+        border: 1px solid #cbd5e1;
+        border-radius: 8px;
+        padding: 10px;
+        margin-bottom: 10px;
+        font-size: 14px;
+      }
+      textarea {
+        min-height: 90px;
+        resize: vertical;
+      }
+      button {
+        border: 0;
+        border-radius: 8px;
+        padding: 10px 14px;
+        cursor: pointer;
+      }
+      .primary { background: #0ea5e9; color: white; }
+      .secondary { background: #e2e8f0; color: #0f172a; }
+      .danger { background: #ef4444; color: white; }
+      ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+      }
+      li {
+        border: 1px solid #e2e8f0;
+        border-radius: 10px;
+        padding: 12px;
+        margin-bottom: 10px;
+        background: #fff;
+      }
+      .row {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+      }
+      .muted {
+        color: #475569;
+        font-size: 14px;
+      }
+      .status {
+        margin-bottom: 12px;
+        font-size: 14px;
+        min-height: 20px;
+      }
+      @media (max-width: 800px) {
+        .grid {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="container">
+      <h1>Bakery Recipes</h1>
+      <p class="muted">Minimal front-end connected to your Express API.</p>
+      <div id="status" class="status"></div>
+
+      <div class="grid">
+        <section class="card">
+          <h2>Create Recipe</h2>
+          <form id="create-form">
+            <label for="create-name">Name</label>
+            <input id="create-name" name="name" required />
+
+            <label for="create-category">Category</label>
+            <input id="create-category" name="category" required />
+
+            <label for="create-ingredients">Ingredients (comma separated)</label>
+            <input id="create-ingredients" name="ingredients" required />
+
+            <label for="create-instructions">Instructions</label>
+            <textarea id="create-instructions" name="instructions" required></textarea>
+
+            <button type="submit" class="primary">Create</button>
+          </form>
+        </section>
+
+        <section class="card">
+          <h2>Recipes</h2>
+          <div class="row" style="margin-bottom: 10px;">
+            <button id="refresh-btn" class="secondary" type="button">Refresh</button>
+          </div>
+          <ul id="recipes-list"></ul>
+        </section>
+      </div>
+    </main>
+
+    <script src="/app.js"></script>
+  </body>
+</html>
