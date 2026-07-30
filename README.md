@@ -8,7 +8,11 @@ A small Express REST API for managing bakery recipes with JSON-file persistence.
    ```bash
    npm install
    ```
-2. Start the API:
+2. Create environment file:
+  ```bash
+  cp .env.example .env
+  ```
+3. Start the API:
    ```bash
    npm run api
    ```
@@ -22,6 +26,31 @@ npm run dev
 The server runs on `http://localhost:3000` by default.
 
 Frontend URL: `http://localhost:3000`
+
+## Project Structure
+
+```text
+src/
+  app.js                  # Express app setup
+  index.js                # Server bootstrap + dotenv config
+  config/
+    env.js                # Environment parsing/validation
+  routes/
+    healthRoutes.js       # /health endpoint
+    recipeRoutes.js       # /recipes CRUD endpoints
+  middleware/
+    asyncHandler.js       # Async error wrapper
+    requestLogger.js      # Request logging middleware
+    validateRecipe.js     # Request payload validation
+    errorHandlers.js      # 404 and error middleware
+  data/
+    recipesStore.js       # JSON file read/write logic
+```
+
+Environment variables are loaded with `dotenv` from `.env` and parsed via `src/config/env.js`.
+
+- `PORT`: server port (default: `3000`, must be `1-65535`)
+- `RECIPES_FILE`: JSON data file path (default: `./data/recipes.json`)
 
 ## Endpoints
 
