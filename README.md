@@ -1,5 +1,7 @@
 # Bakery Recipes API
 
+[![CI](https://github.com/iltStudent11/Recipes/actions/workflows/ci.yml/badge.svg)](https://github.com/iltStudent11/Recipes/actions/workflows/ci.yml)
+
 This is my small Express REST API for managing bakery recipes with JSON-file persistence.
 
 ## Setup
