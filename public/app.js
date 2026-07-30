@@ -63,13 +63,57 @@ const state = {
   selectedMealPlanId: null
 };
 
+function getConfiguredApiBaseUrl() {
+  const params = new URLSearchParams(window.location.search);
+  const fromQuery = params.get('apiBaseUrl');
+  if (fromQuery && fromQuery.trim()) {
+    return fromQuery.trim().replace(/\/$/, '');
+  }
+
+  if (typeof window.__API_BASE_URL__ === 'string' && window.__API_BASE_URL__.trim()) {
+    return window.__API_BASE_URL__.trim().replace(/\/$/, '');
+  }
+
+  const metaTag = document.querySelector('meta[name="api-base-url"]');
+  const fromMeta = metaTag?.getAttribute('content');
+  if (fromMeta && fromMeta.trim()) {
+    return fromMeta.trim().replace(/\/$/, '');
+  }
+
+  const fromStorage = window.localStorage.getItem('bakeryApiBaseUrl');
+  if (fromStorage && fromStorage.trim()) {
+    return fromStorage.trim().replace(/\/$/, '');
+  }
+
+  return '';
+}
+
+const API_BASE_URL = getConfiguredApiBaseUrl();
+
+function toApiUrl(pathOrUrl) {
+  const isAbsolute = /^https?:\/\//i.test(pathOrUrl);
+  if (isAbsolute) {
+    return pathOrUrl;
+  }
+
+  if (!API_BASE_URL) {
+    return pathOrUrl;
+  }
+
+  if (pathOrUrl.startsWith('/')) {
+    return `${API_BASE_URL}${pathOrUrl}`;
+  }
+
+  return `${API_BASE_URL}/${pathOrUrl}`;
+}
+
 function setStatus(message, isError = false) {
   statusEl.textContent = message;
   statusEl.style.color = isError ? '#b91c1c' : '#0f766e';
 }
 
 async function apiRequest(url, options = {}) {
-  const response = await fetch(url, options);
+  const response = await fetch(toApiUrl(url), options);
 
   if (!response.ok) {
     const errorBody = await response.json().catch(() => ({}));
@@ -670,12 +714,13 @@ pantryForm.addEventListener('submit', async (event) => {
 });
 
 (async () => {
+  setActiveTab(hashToView(window.location.hash));
+  resetRecipeForm();
+
   try {
     await refreshRecipesBase();
     await refreshMealPlans();
     await refreshPantry();
-    setActiveTab(hashToView(window.location.hash));
-    resetRecipeForm();
     setStatus('Loaded recipes, meal plans, and pantry');
   } catch (error) {
     setStatus(error.message, true);

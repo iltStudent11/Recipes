@@ -29,6 +29,25 @@ I run the server on `http://localhost:3000` by default.
 
 My front-end URL is `http://localhost:3000`
 
+## GitHub Pages Front-End + Hosted API
+
+When this UI is deployed to GitHub Pages, it must call a hosted API URL (Pages only serves static files).
+
+Set the API base URL in [public/index.html](public/index.html):
+
+```html
+<meta name="api-base-url" content="https://your-api-host.example.com" />
+```
+
+The front-end reads API base URL in this order:
+
+1. `?apiBaseUrl=https://...` query parameter
+2. `window.__API_BASE_URL__`
+3. `<meta name="api-base-url" ...>`
+4. `localStorage['bakeryApiBaseUrl']`
+
+If none is set, it defaults to relative paths (works for local `npm run api`).
+
 My front-end page includes **Recipes**, **Meal Plans**, **Shopping Lists**, and **Pantry** sections.
 
 I organized the front-end into four tabs:
