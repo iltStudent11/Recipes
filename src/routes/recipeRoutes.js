@@ -3,6 +3,7 @@ const asyncHandler = require('../middleware/asyncHandler');
 const validateRecipe = require('../middleware/validateRecipe');
 const validateRecipePatch = require('../middleware/validateRecipePatch');
 const { readRecipes, writeRecipes, getNextId } = require('../data/recipesStore');
+const { readPantryItems } = require('../data/pantryStore');
 
 const router = express.Router();
 
@@ -15,6 +16,10 @@ function parseRecipeId(req, res) {
   }
 
   return id;
+}
+
+function normalizeIngredientName(name) {
+  return String(name || '').trim().toLowerCase();
 }
 
 router.get('/', asyncHandler(async (req, res) => {
@@ -49,6 +54,41 @@ router.get('/:id', asyncHandler(async (req, res) => {
   }
 
   return res.status(200).json(recipe);
+}));
+
+router.get('/:id/availability', asyncHandler(async (req, res) => {
+  const id = parseRecipeId(req, res);
+  if (id === null) {
+    return;
+  }
+
+  const [recipes, pantryItems] = await Promise.all([readRecipes(), readPantryItems()]);
+  const recipe = recipes.find((item) => item.id === id);
+
+  if (!recipe) {
+    return res.status(404).json({ error: 'Recipe not found' });
+  }
+
+  const pantrySet = new Set(pantryItems.map((item) => normalizeIngredientName(item.name)));
+  const availableIngredients = [];
+  const missingIngredients = [];
+
+  recipe.ingredients.forEach((ingredient) => {
+    const normalized = normalizeIngredientName(ingredient);
+    if (pantrySet.has(normalized)) {
+      availableIngredients.push(ingredient);
+    } else {
+      missingIngredients.push(ingredient);
+    }
+  });
+
+  return res.status(200).json({
+    recipeId: recipe.id,
+    recipeName: recipe.name,
+    available: missingIngredients.length === 0,
+    availableIngredients,
+    missingIngredients
+  });
 }));
 
 router.post('/', validateRecipe, asyncHandler(async (req, res) => {

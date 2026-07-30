@@ -21,6 +21,10 @@
     {
       "key": "mealPlanId",
       "value": "1"
+    },
+    {
+      "key": "pantryName",
+      "value": "flour"
     }
   ],
   "item": [
@@ -142,6 +146,24 @@
       }
     },
     {
+      "name": "Check Recipe Availability",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/recipes/{{recipeId}}/availability",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "recipes",
+            "{{recipeId}}",
+            "availability"
+          ]
+        }
+      }
+    },
+    {
       "name": "List Meal Plans",
       "request": {
         "method": "GET",
@@ -218,6 +240,24 @@
       }
     },
     {
+      "name": "Get Missing Items",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/meal-plans/{{mealPlanId}}/missing-items",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "meal-plans",
+            "{{mealPlanId}}",
+            "missing-items"
+          ]
+        }
+      }
+    },
+    {
       "name": "Delete Meal Plan",
       "request": {
         "method": "DELETE",
@@ -230,6 +270,64 @@
           "path": [
             "meal-plans",
             "{{mealPlanId}}"
+          ]
+        }
+      }
+    },
+    {
+      "name": "List Pantry Items",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/pantry",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "pantry"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Add Or Update Pantry Item",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"{{pantryName}}\",\n  \"quantity\": \"2 bags\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/pantry",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "pantry"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Delete Pantry Item",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/pantry/{{pantryName}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "pantry",
+            "{{pantryName}}"
           ]
         }
       }

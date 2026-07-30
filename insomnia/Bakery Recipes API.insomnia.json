@@ -18,7 +18,8 @@
       "data": {
         "base_url": "http://localhost:3000",
         "recipe_id": "1",
-        "meal_plan_id": "1"
+        "meal_plan_id": "1",
+        "pantry_name": "flour"
       }
     },
     {
@@ -32,6 +33,12 @@
       "_type": "request_group",
       "parentId": "wrk_bakery_recipes_api",
       "name": "Meal Plans"
+    },
+    {
+      "_id": "fld_pantry",
+      "_type": "request_group",
+      "parentId": "wrk_bakery_recipes_api",
+      "name": "Pantry"
     },
     {
       "_id": "req_health",
@@ -116,6 +123,17 @@
       "headers": []
     },
     {
+      "_id": "req_recipe_availability",
+      "_type": "request",
+      "parentId": "fld_recipes",
+      "name": "Check Recipe Availability",
+      "method": "GET",
+      "url": "{{ _.base_url }}/recipes/{{ _.recipe_id }}/availability",
+      "body": {},
+      "parameters": [],
+      "headers": []
+    },
+    {
       "_id": "req_list_meal_plans",
       "_type": "request",
       "parentId": "fld_meal_plans",
@@ -168,12 +186,64 @@
       "headers": []
     },
     {
+      "_id": "req_get_missing_items",
+      "_type": "request",
+      "parentId": "fld_meal_plans",
+      "name": "Get Missing Items",
+      "method": "GET",
+      "url": "{{ _.base_url }}/meal-plans/{{ _.meal_plan_id }}/missing-items",
+      "body": {},
+      "parameters": [],
+      "headers": []
+    },
+    {
       "_id": "req_delete_meal_plan",
       "_type": "request",
       "parentId": "fld_meal_plans",
       "name": "Delete Meal Plan",
       "method": "DELETE",
       "url": "{{ _.base_url }}/meal-plans/{{ _.meal_plan_id }}",
+      "body": {},
+      "parameters": [],
+      "headers": []
+    },
+    {
+      "_id": "req_list_pantry",
+      "_type": "request",
+      "parentId": "fld_pantry",
+      "name": "List Pantry Items",
+      "method": "GET",
+      "url": "{{ _.base_url }}/pantry",
+      "body": {},
+      "parameters": [],
+      "headers": []
+    },
+    {
+      "_id": "req_upsert_pantry",
+      "_type": "request",
+      "parentId": "fld_pantry",
+      "name": "Add Or Update Pantry Item",
+      "method": "POST",
+      "url": "{{ _.base_url }}/pantry",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"name\": \"{{ _.pantry_name }}\",\n  \"quantity\": \"2 bags\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ]
+    },
+    {
+      "_id": "req_delete_pantry",
+      "_type": "request",
+      "parentId": "fld_pantry",
+      "name": "Delete Pantry Item",
+      "method": "DELETE",
+      "url": "{{ _.base_url }}/pantry/{{ _.pantry_name }}",
       "body": {},
       "parameters": [],
       "headers": []

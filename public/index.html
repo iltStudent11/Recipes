@@ -202,6 +202,7 @@
         <a id="tab-recipes" class="tab-btn active" href="#recipes">Recipes</a>
         <a id="tab-meal-plans" class="tab-btn" href="#meal-plans">Meal Plans</a>
         <a id="tab-shopping" class="tab-btn" href="#shopping">Shopping Lists</a>
+        <a id="tab-pantry" class="tab-btn" href="#pantry">Pantry</a>
       </nav>
 
       <div id="status" class="status"></div>
@@ -240,7 +241,9 @@
               <div class="row" style="margin-top: 10px;">
                 <button id="recipe-edit-btn" class="secondary" type="button">Edit</button>
                 <button id="recipe-delete-btn" class="danger" type="button">Delete</button>
+                <button id="recipe-availability-btn" class="secondary" type="button">Check Availability</button>
               </div>
+              <div id="recipe-availability-output" class="muted" style="margin-top: 8px;"></div>
             </section>
 
             <section class="card">
@@ -308,9 +311,35 @@
           </select>
           <div class="row" style="margin-bottom: 10px;">
             <button id="shopping-load-btn" class="secondary" type="button">Load Shopping List</button>
+            <button id="shopping-missing-btn" class="secondary" type="button">Load Missing Items</button>
           </div>
           <ul id="shopping-list-items"></ul>
         </section>
+      </section>
+
+      <section id="view-pantry" class="stack hidden">
+        <div class="grid-3">
+          <section class="card">
+            <h2>Pantry Inventory</h2>
+            <div class="row" style="margin-bottom: 10px;">
+              <button id="pantry-refresh-btn" class="secondary" type="button">Refresh Pantry</button>
+            </div>
+            <ul id="pantry-list" class="list-scroll"></ul>
+          </section>
+
+          <section class="card">
+            <h2>Add / Update Pantry Item</h2>
+            <form id="pantry-form">
+              <label for="pantry-name">Ingredient Name</label>
+              <input id="pantry-name" name="name" required />
+
+              <label for="pantry-quantity">Quantity (optional)</label>
+              <input id="pantry-quantity" name="quantity" placeholder="e.g. 2 cups" />
+
+              <button type="submit" class="primary">Save Pantry Item</button>
+            </form>
+          </section>
+        </div>
       </section>
     </main>
 

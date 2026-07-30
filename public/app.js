@@ -3,10 +3,12 @@ const statusEl = document.getElementById('status');
 const tabRecipesBtn = document.getElementById('tab-recipes');
 const tabMealPlansBtn = document.getElementById('tab-meal-plans');
 const tabShoppingBtn = document.getElementById('tab-shopping');
+const tabPantryBtn = document.getElementById('tab-pantry');
 
 const viewRecipes = document.getElementById('view-recipes');
 const viewMealPlans = document.getElementById('view-meal-plans');
 const viewShopping = document.getElementById('view-shopping');
+const viewPantry = document.getElementById('view-pantry');
 
 const quickNewRecipeBtn = document.getElementById('quick-new-recipe');
 const quickNewMealPlanBtn = document.getElementById('quick-new-meal-plan');
@@ -20,6 +22,8 @@ const recipeSummaryListEl = document.getElementById('recipe-summary-list');
 const recipeDetailEl = document.getElementById('recipe-detail');
 const recipeEditBtn = document.getElementById('recipe-edit-btn');
 const recipeDeleteBtn = document.getElementById('recipe-delete-btn');
+const recipeAvailabilityBtn = document.getElementById('recipe-availability-btn');
+const recipeAvailabilityOutput = document.getElementById('recipe-availability-output');
 
 const recipeFormTitle = document.getElementById('recipe-form-title');
 const recipeForm = document.getElementById('recipe-form');
@@ -39,13 +43,21 @@ const mealPlanRecipeOptionsEl = document.getElementById('meal-plan-recipe-option
 
 const shoppingPlanSelect = document.getElementById('shopping-plan-select');
 const shoppingLoadBtn = document.getElementById('shopping-load-btn');
+const shoppingMissingBtn = document.getElementById('shopping-missing-btn');
 const shoppingListItemsEl = document.getElementById('shopping-list-items');
+
+const pantryListEl = document.getElementById('pantry-list');
+const pantryRefreshBtn = document.getElementById('pantry-refresh-btn');
+const pantryForm = document.getElementById('pantry-form');
+const pantryNameInput = document.getElementById('pantry-name');
+const pantryQuantityInput = document.getElementById('pantry-quantity');
 
 const state = {
   activeView: 'recipes',
   recipes: [],
   visibleRecipes: [],
   mealPlans: [],
+  pantryItems: [],
   selectedRecipeId: null,
   recipeFormMode: 'create',
   selectedMealPlanId: null
@@ -85,10 +97,12 @@ function setActiveTab(viewName) {
   viewRecipes.classList.toggle('hidden', viewName !== 'recipes');
   viewMealPlans.classList.toggle('hidden', viewName !== 'meal-plans');
   viewShopping.classList.toggle('hidden', viewName !== 'shopping');
+  viewPantry.classList.toggle('hidden', viewName !== 'pantry');
 
   tabRecipesBtn.classList.toggle('active', viewName === 'recipes');
   tabMealPlansBtn.classList.toggle('active', viewName === 'meal-plans');
   tabShoppingBtn.classList.toggle('active', viewName === 'shopping');
+  tabPantryBtn.classList.toggle('active', viewName === 'pantry');
 }
 
 function viewToHash(viewName) {
@@ -98,6 +112,10 @@ function viewToHash(viewName) {
 
   if (viewName === 'shopping') {
     return '#shopping';
+  }
+
+  if (viewName === 'pantry') {
+    return '#pantry';
   }
 
   return '#recipes';
@@ -110,6 +128,10 @@ function hashToView(hashValue) {
 
   if (hashValue === '#shopping') {
     return 'shopping';
+  }
+
+  if (hashValue === '#pantry') {
+    return 'pantry';
   }
 
   return 'recipes';
@@ -136,6 +158,7 @@ function renderRecipeDetail() {
 
   if (!selected) {
     recipeDetailEl.innerHTML = '<span class="muted">Select a recipe to view details.</span>';
+    recipeAvailabilityOutput.textContent = '';
     return;
   }
 
@@ -145,6 +168,13 @@ function renderRecipeDetail() {
     <div class="muted">Ingredients: ${selected.ingredients.join(', ')}</div>
     <div style="margin-top: 8px;">${selected.instructions}</div>
   `;
+}
+
+function renderRecipeAvailability(data) {
+  const availableText = data.available
+    ? 'Available now'
+    : `Missing: ${data.missingIngredients.join(', ')}`;
+  recipeAvailabilityOutput.textContent = availableText;
 }
 
 function renderRecipeList() {
@@ -338,6 +368,45 @@ async function refreshMealPlans() {
   renderShoppingPlanSelect();
 }
 
+function renderPantryList() {
+  if (state.pantryItems.length === 0) {
+    pantryListEl.innerHTML = '<li>No pantry items yet.</li>';
+    return;
+  }
+
+  pantryListEl.innerHTML = state.pantryItems
+    .map((item) => {
+      const quantityText = item.quantity ? ` (${item.quantity})` : '';
+      return `
+        <li>
+          <strong>${item.name}</strong>${quantityText}
+          <div class="row" style="margin-top: 8px;">
+            <button class="danger" data-delete-pantry-name="${encodeURIComponent(item.name)}" type="button">Delete</button>
+          </div>
+        </li>
+      `;
+    })
+    .join('');
+
+  pantryListEl.querySelectorAll('button[data-delete-pantry-name]').forEach((btn) => {
+    btn.addEventListener('click', async () => {
+      const encodedName = btn.getAttribute('data-delete-pantry-name');
+      try {
+        await apiRequest(`/pantry/${encodedName}`, { method: 'DELETE' });
+        await refreshPantry();
+        setStatus('Pantry item deleted');
+      } catch (error) {
+        setStatus(error.message, true);
+      }
+    });
+  });
+}
+
+async function refreshPantry() {
+  state.pantryItems = await apiRequest('/pantry');
+  renderPantryList();
+}
+
 async function loadShoppingList(planId) {
   state.selectedMealPlanId = planId;
   renderShoppingPlanSelect();
@@ -357,6 +426,10 @@ tabShoppingBtn.addEventListener('click', (event) => {
   event.preventDefault();
   goToView('shopping');
 });
+tabPantryBtn.addEventListener('click', (event) => {
+  event.preventDefault();
+  goToView('pantry');
+});
 
 quickNewRecipeBtn.addEventListener('click', () => {
   goToView('recipes');
@@ -367,6 +440,21 @@ quickNewRecipeBtn.addEventListener('click', () => {
 quickNewMealPlanBtn.addEventListener('click', () => {
   goToView('meal-plans');
   mealPlanNameInput.focus();
+});
+
+recipeAvailabilityBtn.addEventListener('click', async () => {
+  if (!state.selectedRecipeId) {
+    setStatus('Select a recipe first.', true);
+    return;
+  }
+
+  try {
+    const data = await apiRequest(`/recipes/${state.selectedRecipeId}/availability`);
+    renderRecipeAvailability(data);
+    setStatus(`Checked pantry availability for recipe #${state.selectedRecipeId}`);
+  } catch (error) {
+    setStatus(error.message, true);
+  }
 });
 
 window.addEventListener('hashchange', () => {
@@ -521,13 +609,74 @@ shoppingLoadBtn.addEventListener('click', async () => {
   }
 });
 
+shoppingMissingBtn.addEventListener('click', async () => {
+  const selectedId = Number(shoppingPlanSelect.value);
+
+  if (!Number.isInteger(selectedId) || selectedId < 1) {
+    setStatus('Select a meal plan first.', true);
+    return;
+  }
+
+  try {
+    const data = await apiRequest(`/meal-plans/${selectedId}/missing-items`);
+    if (!data.items.length) {
+      shoppingListItemsEl.innerHTML = '<li>All ingredients are available in pantry.</li>';
+    } else {
+      shoppingListItemsEl.innerHTML = data.items
+        .map((item) => `<li>${item.ingredient} (x${item.count})</li>`)
+        .join('');
+    }
+    setStatus(`Loaded missing items for meal plan #${selectedId}`);
+  } catch (error) {
+    setStatus(error.message, true);
+  }
+});
+
+pantryRefreshBtn.addEventListener('click', async () => {
+  try {
+    await refreshPantry();
+    setStatus('Pantry refreshed');
+  } catch (error) {
+    setStatus(error.message, true);
+  }
+});
+
+pantryForm.addEventListener('submit', async (event) => {
+  event.preventDefault();
+
+  const payload = {
+    name: pantryNameInput.value.trim(),
+    quantity: pantryQuantityInput.value.trim()
+  };
+
+  if (!payload.name) {
+    setStatus('Pantry item name is required.', true);
+    return;
+  }
+
+  try {
+    await apiRequest('/pantry', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+
+    pantryForm.reset();
+    await refreshPantry();
+    setStatus(`Saved pantry item: ${payload.name}`);
+  } catch (error) {
+    setStatus(error.message, true);
+  }
+});
+
 (async () => {
   try {
     await refreshRecipesBase();
     await refreshMealPlans();
+    await refreshPantry();
     setActiveTab(hashToView(window.location.hash));
     resetRecipeForm();
-    setStatus('Loaded recipes and meal plans');
+    setStatus('Loaded recipes, meal plans, and pantry');
   } catch (error) {
     setStatus(error.message, true);
   }

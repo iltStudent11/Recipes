@@ -1,6 +1,7 @@
 const express = require('express');
 const asyncHandler = require('../middleware/asyncHandler');
 const { readRecipes } = require('../data/recipesStore');
+const { readPantryItems } = require('../data/pantryStore');
 const {
   readMealPlans,
   writeMealPlans,
@@ -8,6 +9,10 @@ const {
 } = require('../data/mealPlansStore');
 
 const router = express.Router();
+
+function normalizeIngredientName(name) {
+  return String(name || '').trim().toLowerCase();
+}
 
 function parseMealPlanId(req, res) {
   const id = Number(req.params.id);
@@ -136,6 +141,62 @@ router.get('/:id/shopping-list', asyncHandler(async (req, res) => {
     mealPlanId: mealPlan.id,
     mealPlanName: mealPlan.name,
     recipeCount: selectedRecipes.length,
+    items
+  });
+}));
+
+router.get('/:id/missing-items', asyncHandler(async (req, res) => {
+  const id = parseMealPlanId(req, res);
+  if (id === null) {
+    return;
+  }
+
+  const [mealPlans, recipes, pantryItems] = await Promise.all([
+    readMealPlans(),
+    readRecipes(),
+    readPantryItems()
+  ]);
+  const mealPlan = mealPlans.find((item) => item.id === id);
+
+  if (!mealPlan) {
+    return res.status(404).json({ error: 'Meal plan not found' });
+  }
+
+  const selectedRecipes = mealPlan.recipeIds
+    .map((recipeId) => recipes.find((recipe) => recipe.id === recipeId))
+    .filter(Boolean);
+
+  const pantrySet = new Set(pantryItems.map((item) => normalizeIngredientName(item.name)));
+  const missingMap = new Map();
+
+  selectedRecipes.forEach((recipe) => {
+    recipe.ingredients.forEach((ingredient) => {
+      const normalized = normalizeIngredientName(ingredient);
+
+      if (pantrySet.has(normalized)) {
+        return;
+      }
+
+      const existing = missingMap.get(normalized);
+      if (!existing) {
+        missingMap.set(normalized, {
+          ingredient: ingredient.trim(),
+          count: 1
+        });
+      } else {
+        existing.count += 1;
+      }
+    });
+  });
+
+  const items = [...missingMap.values()].sort((first, second) => {
+    return first.ingredient.localeCompare(second.ingredient);
+  });
+
+  return res.status(200).json({
+    mealPlanId: mealPlan.id,
+    mealPlanName: mealPlan.name,
+    pantryItemCount: pantryItems.length,
     items
   });
 }));
