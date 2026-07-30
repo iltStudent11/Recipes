@@ -26,19 +26,16 @@ jobs:
       # If you use a framework (React/Vite/Next/etc), replace with your real build steps.
       - name: Prepare static site
         run: |
+          rm -rf dist
           mkdir -p dist
-          if [ -d "." ]; then
-            cp -r . dist-temp
+
+          if [ -d public ]; then
+            cp -R public/. dist/
           fi
-          # Example placeholder index if you don't already produce one:
+
           if [ ! -f dist/index.html ]; then
-            cat > dist/index.html <<'EOF'
-          <!doctype html>
-          <html>
-            <head><meta charset="utf-8"><title>Recipes</title></head>
-            <body><h1>Recipes deployed with GitHub Pages</h1></body>
-          </html>
-          EOF
+            echo "Missing dist/index.html after build. Ensure public/index.html exists or add your real build step."
+            exit 1
           fi
 
       - name: Setup Pages
