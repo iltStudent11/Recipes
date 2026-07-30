@@ -55,17 +55,30 @@ Environment variables are loaded with `dotenv` from `.env` and parsed via `src/c
 ## Endpoints
 
 - `GET /health` → `200 OK`
-- `GET /recipes` → `200 OK`
-- `GET /recipes/:id` → `200 OK` or `404 Not Found`
+- `GET /recipes` → `200 OK` (supports query params: `category`, `q`)
+- `GET /recipes/:id` → `200 OK`, `400 Bad Request`, or `404 Not Found`
 - `POST /recipes` → `201 Created` or `400 Bad Request`
 - `PUT /recipes/:id` → `200 OK`, `400 Bad Request`, or `404 Not Found`
-- `DELETE /recipes/:id` → `204 No Content` or `404 Not Found`
+- `PATCH /recipes/:id` → `200 OK`, `400 Bad Request`, or `404 Not Found`
+- `DELETE /recipes/:id` → `204 No Content`, `400 Bad Request`, or `404 Not Found`
+
+The API returns JSON bodies for success and errors (`400`, `404`, `500`).
 
 ## Example Requests
 
 ### List all recipes
 ```bash
 curl -i http://localhost:3000/recipes
+```
+
+### Filter recipes by category
+```bash
+curl -i "http://localhost:3000/recipes?category=bread"
+```
+
+### Search recipes by text
+```bash
+curl -i "http://localhost:3000/recipes?q=chocolate"
 ```
 
 ### Get one recipe
@@ -94,6 +107,15 @@ curl -i -X PUT http://localhost:3000/recipes/1 \
     "category": "cookie",
     "ingredients": ["flour", "butter", "sugar", "eggs"],
     "instructions": "Mix ingredients and bake."
+  }'
+```
+
+### Partially update a recipe
+```bash
+curl -i -X PATCH http://localhost:3000/recipes/1 \
+  -H "Content-Type: application/json" \
+  -d '{
+    "instructions": "Rest dough overnight, then bake."
   }'
 ```
 
